@@ -1,0 +1,17 @@
+version: '1'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-img-processor
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - imgprocessordb:/var/lib/mysql
+
+volumes:
+  imgprocessordb: {}

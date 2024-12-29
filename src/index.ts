@@ -1,14 +1,12 @@
 import express from 'express'
+import imagesRouter from './modules/images/images.controller'
 
 const app = express()
 app.use(express.json())
 
-const PORT = 3000
+const PORT = process.env.PORT ?? 3000
 
-app.get('/ping', (_req, res) => {
-  console.log('GET ping request')
-  res.send('pong')
-})
+app.use('/images', imagesRouter)
 
 app.listen(PORT, () => {
   console.log(`🚀 Server listening on port: ${PORT}`)

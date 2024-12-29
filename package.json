@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/index.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "start": "node build/index.js",
     "migrate": "npx prisma migrate dev --name init",
     "lint": "ts-standard",
@@ -38,5 +38,8 @@
       "build",
       "src/**/*.js"
     ]
+  },
+  "prisma": {
+    "schema": "libs/prisma/schema.prisma"
   }
 }

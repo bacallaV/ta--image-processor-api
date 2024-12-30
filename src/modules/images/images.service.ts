@@ -39,6 +39,22 @@ export async function fisheye (image: Express.Multer.File, radius: number): Prom
   })
 }
 
+export async function blur (image: Express.Multer.File, blur: number): Promise<Image> {
+  const jimpImage = await Jimp.fromBuffer(image.buffer)
+  jimpImage.blur(blur)
+
+  const extension: string = image.mimetype.split('/')[1]
+  const fileName: string = `public/${generateUniqueFilename(image)}`
+  await jimpImage.write(`${fileName}.${extension}`)
+
+  return await prisma.image.create({
+    data: {
+      title: image.originalname.split('.')[0],
+      url: `${fileName}.${extension}`
+    }
+  })
+}
+
 // Función para generar un nombre único
 function generateUniqueFilename (file: Express.Multer.File): string {
   const randomString = Math.random().toString(36).substring(2, 10)

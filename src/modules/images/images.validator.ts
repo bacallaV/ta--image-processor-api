@@ -42,3 +42,18 @@ export const fisheyeImageValidator = (): Middleware & ContextRunner => checkExac
     }
   })
 )
+
+export const blurImageValidator = (): Middleware & ContextRunner => checkExact(
+  checkSchema({
+    blur: {
+      in: ['body'],
+      notEmpty: {
+        errorMessage: 'Required parameter'
+      },
+      isNumeric: {
+        errorMessage: 'Should be a number'
+      },
+      toInt: true
+    }
+  })
+)

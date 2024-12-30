@@ -1,7 +1,7 @@
 import { checkExact, checkSchema, ContextRunner } from 'express-validator'
 import { Middleware } from 'express-validator/lib/base'
 
-export const uploadImageValidator = (): Middleware & ContextRunner => checkExact(
+export const resizeImageValidator = (): Middleware & ContextRunner => checkExact(
   checkSchema({
     width: {
       in: ['body'],
@@ -21,6 +21,21 @@ export const uploadImageValidator = (): Middleware & ContextRunner => checkExact
       },
       isInt: {
         options: { gt: 0 },
+        errorMessage: 'Should be a number'
+      },
+      toInt: true
+    }
+  })
+)
+
+export const fisheyeImageValidator = (): Middleware & ContextRunner => checkExact(
+  checkSchema({
+    radius: {
+      in: ['body'],
+      notEmpty: {
+        errorMessage: 'Required parameter'
+      },
+      isNumeric: {
         errorMessage: 'Should be a number'
       },
       toInt: true

@@ -11,54 +11,35 @@ export async function resize (image: Express.Multer.File, width: number, height:
   const jimpImage = await Jimp.fromBuffer(image.buffer)
   jimpImage.resize({ w: width, h: height })
 
-  const extension: string = image.mimetype.split('/')[1]
-  const fileName: string = `public/${generateUniqueFilename(image)}`
-  await jimpImage.write(`${fileName}.${extension}`)
-
-  return await prisma.image.create({
-    data: {
-      title: image.originalname.split('.')[0],
-      url: `${fileName}.${extension}`
-    }
-  })
+  return await saveImage(image, jimpImage)
 }
 
 export async function fisheye (image: Express.Multer.File, radius: number): Promise<Image> {
   const jimpImage = await Jimp.fromBuffer(image.buffer)
   jimpImage.fisheye({ radius })
 
-  const extension: string = image.mimetype.split('/')[1]
-  const fileName: string = `public/${generateUniqueFilename(image)}`
-  await jimpImage.write(`${fileName}.${extension}`)
-
-  return await prisma.image.create({
-    data: {
-      title: image.originalname.split('.')[0],
-      url: `${fileName}.${extension}`
-    }
-  })
+  return await saveImage(image, jimpImage)
 }
 
 export async function blur (image: Express.Multer.File, blur: number): Promise<Image> {
   const jimpImage = await Jimp.fromBuffer(image.buffer)
   jimpImage.blur(blur)
 
+  return await saveImage(image, jimpImage)
+}
+
+async function saveImage (image: Express.Multer.File, jimpImage: Awaited<ReturnType<typeof Jimp.fromBuffer>>): Promise<Image> {
   const extension: string = image.mimetype.split('/')[1]
-  const fileName: string = `public/${generateUniqueFilename(image)}`
+  const originalFileName: string = image.originalname.split('.')[0]
+  const randomString = Math.random().toString(36).substring(2, 10)
+  const fileName: string = `public/${originalFileName}-${randomString}`
+
   await jimpImage.write(`${fileName}.${extension}`)
 
   return await prisma.image.create({
     data: {
-      title: image.originalname.split('.')[0],
+      title: originalFileName,
       url: `${fileName}.${extension}`
     }
   })
-}
-
-// Función para generar un nombre único
-function generateUniqueFilename (file: Express.Multer.File): string {
-  const randomString = Math.random().toString(36).substring(2, 10)
-  const filename: string = file.originalname.split('.')[0]
-
-  return `${filename}-${randomString}`
 }

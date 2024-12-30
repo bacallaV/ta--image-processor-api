@@ -1,7 +1,10 @@
 import express from 'express'
+
+import { handleError } from './middlewares/error-handler/error-handler'
+
 import imagesRouter from './modules/images/images.controller'
 import authRouter from './modules/auth/auth.controller'
-import { handleError } from './middlewares/error-handler/error-handler'
+import publicRouter from './modules/public/public.controller'
 
 const app = express()
 app.use(express.json())
@@ -11,6 +14,7 @@ const PORT = process.env.PORT ?? 3000
 
 app.use('/images', imagesRouter)
 app.use('/auth', authRouter)
+app.use('/public', publicRouter)
 
 app.use(handleError)
 

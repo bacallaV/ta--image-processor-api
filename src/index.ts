@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 
 import { handleError } from './middlewares/error-handler/error-handler'
 
@@ -7,6 +8,12 @@ import authRouter from './modules/auth/auth.controller'
 import publicRouter from './modules/public/public.controller'
 
 const app = express()
+app.use(cors({
+  origin: '*',
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true
+}))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
